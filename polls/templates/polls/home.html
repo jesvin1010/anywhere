@@ -1,0 +1,91 @@
+{% extends 'polls/base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f5f9ff, #e6f0ff);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 🔹 Added for logout position */
+  .top-bar {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 18px;
+  }
+
+  .logout-btn {
+    background-color: crimson;
+    padding: 8px 18px;
+    border-radius: 6px;
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  .logout-btn:hover {
+    background-color: rgb(200, 0, 50);
+  }
+
+  .home-container {
+    text-align: center;
+    margin-top: 100px;
+    animation: fadeIn 1.2s ease-in-out;
+  }
+
+  .home-container h1 {
+    color: #2b3a67;
+    font-size: 3em;
+    margin-bottom: 10px;
+  }
+
+  .home-container p {
+    color: #444;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #2b3a67;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    margin: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .btn:hover {
+    background-color: #4053a8;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<!-- 🔹 Logout + Username -->
+<!-- 🔹 Logout Button Only -->
+<div class="top-bar">
+  <a href="{% url 'logout_user' %}" class="logout-btn">Logout</a>
+</div>
+
+<div class="home-container">
+  <h1>Welcome</h1>
+  <h2 style="color:#2b3a67; font-size:2.3em; margin-top:-10px;">{{ user.first_name|upper }} {{ user.last_name|upper }}</h2>
+
+
+  <a href="{% url 'matches_sports' %}" class="btn">View Matches</a>
+  <a href="{% url 'teams_sports' %}" class="btn">View Teams</a>
+  <a href="{% url 'players_sports' %}" class="btn">Players</a>
+
+</div>
+
+
+{% endblock %}

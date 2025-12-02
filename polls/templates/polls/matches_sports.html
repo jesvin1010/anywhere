@@ -1,0 +1,90 @@
+{% extends "polls/base.html" %}
+{% block title %}Select Sport{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f5f9ff, #e6f0ff);
+    margin: 0;
+    padding: 0;
+  }
+
+  .sports-container {
+    max-width: 800px;
+    margin: 80px auto;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .sports-container h2 {
+    color: #2b3a67;
+    font-size: 2em;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  ul li {
+    margin: 15px 0;
+  }
+
+  ul li a {
+    display: inline-block;
+    width: 60%;
+    padding: 12px;
+    background: #2b3a67;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+  }
+
+  ul li a:hover {
+    background: #4053a8;
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .sports-container {
+      width: 90%;
+      padding: 25px 15px;
+    }
+
+    ul li a {
+      width: 80%;
+      font-size: 1em;
+    }
+  }
+</style>
+
+<div class="sports-container">
+  <h2>Select a Sport</h2>
+  <ul>
+    {% for sport in sports %}
+      <li>
+        <a href="{% url 'competitions_list' sport.sport_id %}">
+          {{ sport.name }}
+        </a>
+      </li>
+    {% empty %}
+      <p>No sports available at the moment.</p>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

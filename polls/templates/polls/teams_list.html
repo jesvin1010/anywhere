@@ -1,0 +1,88 @@
+{% extends "polls/base.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1f4037, #99f2c8);
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 60px auto;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+    h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 25px;
+        color: #fff;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .teams-list {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .teams-list li {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .teams-list li:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .teams-list a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        display: block;
+    }
+
+    .teams-list a:hover {
+        color: #f5ffb9;
+    }
+
+    .empty-message {
+        font-style: italic;
+        color: #ffdddd;
+        font-size: 1.1rem;
+    }
+</style>
+
+<div class="container">
+    <h2>Teams in {{ sport.name }}</h2>
+
+    <ul class="teams-list">
+        {% for t in teams %}
+            <li>
+                <a href="{% url 'team_matches' t.team_id %}">
+                    {{ t.name }}
+                </a>
+            </li>
+        {% empty %}
+            <li class="empty-message">No teams found for this sport.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

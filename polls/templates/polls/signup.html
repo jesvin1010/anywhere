@@ -1,0 +1,107 @@
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #c7dfff, #e8f1ff);
+    margin: 0;
+    padding: 0;
+  }
+
+  .signup-container {
+    width: 420px;
+    margin: 80px auto;
+    background: #ffffffee;
+    padding: 38px;
+    border-radius: 12px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.12);
+    text-align: center;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+
+  .signup-title {
+    margin-bottom: 20px;
+    color: #2b3a67;
+    font-size: 2.1em;
+    font-weight: 600;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 6px;
+    border: 1px solid #bbb;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+  }
+
+  input:focus {
+    border-color: #2b3a67;
+    box-shadow: 0 0 5px rgba(43, 58, 103, 0.4);
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    background-color: #2b3a67;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background-color: #4053a8;
+  }
+
+  .login-link {
+    margin-top: 18px;
+    font-size: 15px;
+  }
+
+  .login-link a {
+    color: #2b3a67;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+
+  .error-msg {
+    color: crimson;
+    margin-top: 12px;
+    font-size: 15px;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="signup-container">
+  <h2 class="signup-title">Create Account</h2>
+
+  <form method="POST">
+  {% csrf_token %}
+  <input type="text" name="first_name" placeholder="First Name" required>
+  <input type="text" name="last_name" placeholder="Last Name" required>
+  <input type="text" name="username" placeholder="Username" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="password" name="password" placeholder="Password" required>
+  <button type="submit">Signup</button>
+</form>
+
+  <p class="login-link">Already have an account?
+    <a href="{% url 'login_user' %}">Login</a>
+  </p>
+
+  {% for msg in messages %}
+    <p class="error-msg">{{ msg }}</p>
+  {% endfor %}
+</div>

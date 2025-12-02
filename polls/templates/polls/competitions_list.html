@@ -1,0 +1,109 @@
+{% extends "polls/base.html" %}
+{% block title %}Competitions in {{ sport.name }}{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #f5f9ff, #e6f0ff);
+    margin: 0;
+    padding: 0;
+  }
+
+  .competitions-container {
+    max-width: 800px;
+    margin: 80px auto;
+    background: white;
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .competitions-container h2 {
+    color: #2b3a67;
+    font-size: 2em;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  ul li {
+    margin: 15px 0;
+  }
+
+  ul li a {
+    display: inline-block;
+    width: 70%;
+    padding: 12px;
+    background: #2b3a67;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+  }
+
+  ul li a:hover {
+    background: #4053a8;
+    transform: scale(1.05);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #2b3a67;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  .back-link:hover {
+    color: #4053a8;
+    text-decoration: underline;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .competitions-container {
+      width: 90%;
+      padding: 25px 15px;
+    }
+
+    ul li a {
+      width: 85%;
+      font-size: 1em;
+    }
+  }
+</style>
+
+<div class="competitions-container">
+  <h2>Competitions in {{ sport.name }}</h2>
+
+  {% if competitions %}
+    <ul>
+      {% for comp in competitions %}
+        <li>
+          <a href="{% url 'matches_list' comp.competition_id %}">
+            {{ comp.name }} ({{ comp.season }})
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No competitions available for this sport.</p>
+  {% endif %}
+
+  <a href="{% url 'matches_sports' %}" class="back-link">← Back to Sports</a>
+</div>
+{% endblock %}

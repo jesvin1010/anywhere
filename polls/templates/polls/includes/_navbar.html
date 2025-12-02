@@ -1,0 +1,57 @@
+<style>
+  nav {
+    background: linear-gradient(135deg, #2b3a67, #4053a8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 25px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-size: 1.1em;
+    position: relative;
+    transition: color 0.3s ease;
+  }
+
+  nav a::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background: #ffcc00;
+    left: 0;
+    bottom: -5px;
+    transition: width 0.3s ease;
+  }
+
+  nav a:hover {
+    color: #ffcc00;
+  }
+
+  nav a:hover::after {
+    width: 100%;
+  }
+
+  /* Optional: Make it look good on mobile */
+  @media (max-width: 600px) {
+    nav {
+      flex-direction: column;
+    }
+    nav a {
+      margin: 10px 0;
+    }
+  }
+</style>
+
+<nav>
+  <a href="{% url 'home' %}">Home</a>
+  <a href="{% url 'matches_sports' %}">Matches</a>
+  <a href="{% url 'teams_sports' %}">Teams</a>
+</nav>

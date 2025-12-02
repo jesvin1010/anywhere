@@ -1,0 +1,81 @@
+{% extends "polls/base.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+        font-family: 'Poppins', sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    h2 {
+        text-align: center;
+        color: #2e7d32;
+        font-size: 2.2em;
+        margin-top: 40px;
+        margin-bottom: 25px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        max-width: 700px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    li {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    a {
+        display: block;
+        text-decoration: none;
+        color: #2e7d32;
+        font-weight: bold;
+        padding: 20px;
+        font-size: 1.1em;
+        transition: color 0.2s ease, background-color 0.2s ease;
+        border-radius: 15px;
+    }
+
+    a:hover {
+        background-color: #c8e6c9;
+        color: #1b5e20;
+    }
+
+    .empty {
+        text-align: center;
+        color: #757575;
+        font-size: 1.2em;
+        margin-top: 30px;
+    }
+</style>
+
+<h2>Select Sport</h2>
+
+<ul>
+    {% for s in sports %}
+        <li>
+            <a href="{% url 'teams_list' s.sport_id %}">
+                {{ s.name }}
+            </a>
+        </li>
+    {% empty %}
+        <p class="empty">No sports found.</p>
+    {% endfor %}
+</ul>
+{% endblock %}

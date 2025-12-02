@@ -1,0 +1,104 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #eef3ff, #dce6ff);
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 60px auto;
+        padding: 20px;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    h2 {
+        font-size: 2.2em;
+        color: #2b3a67;
+        margin-bottom: 30px;
+        font-weight: 700;
+    }
+
+    .competition-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .competition-card {
+        background: white;
+        border-radius: 14px;
+        padding: 20px;
+        box-shadow: 0 6px 18px rgba(0, 0, 50, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+    }
+
+    .competition-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 22px rgba(0, 0, 70, 0.15);
+    }
+
+    .competition-card a {
+        text-decoration: none;
+        color: #2b3a67;
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+
+    .back-btn {
+        margin-top: 35px;
+        display: inline-block;
+        padding: 10px 20px;
+        background: #2b3a67;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: 0.3s ease;
+        font-size: 1.1em;
+    }
+
+    .back-btn:hover {
+        background: #4053a8;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+
+<div class="container">
+
+    <h2>Competitions in {{ sport.name }}</h2>
+
+    <div class="competition-list">
+        {% for c in competitions %}
+            <div class="competition-card">
+                <a href="{% url 'players_teams' sport.sport_id c.competition_id %}">
+                    {{ c.name }}<br>
+                    <small style="color:#444;">Season: {{ c.season }}</small>
+                </a>
+            </div>
+        {% empty %}
+            <p>No competitions found for this sport.</p>
+        {% endfor %}
+    </div>
+
+    <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+</div>
+
+{% endblock %}
