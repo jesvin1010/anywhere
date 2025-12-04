@@ -1,0 +1,157 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: #f4f7ff;
+        padding: 20px;
+    }
+
+    .dashboard-title {
+        font-size: 2.2em;
+        font-weight: 600;
+        color: #2b3a67;
+        text-align: center;
+        margin-bottom: 30px;
+        animation: fadeInDown 0.8s ease-in-out;
+    }
+
+    .card-container {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-bottom: 30px;
+    }
+
+    .card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        width: 250px;
+        text-align: center;
+    }
+
+    .card h3 {
+        font-size: 1.2em;
+        color: #444;
+    }
+
+    .card p {
+        font-size: 2em;
+        font-weight: bold;
+        color: #2b3a67;
+    }
+
+    .chart-box {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .activity-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .activity-table th {
+        background: #2b3a67;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .activity-table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+
+
+<h1 class="dashboard-title">📊 User Activity Dashboard</h1>
+
+<div class="card-container">
+    <div class="card">
+        <h3>Total Logs</h3>
+        <p>{{ total_logs }}</p>
+    </div>
+
+    <div class="card">
+        <h3>Total Active Users</h3>
+        <p>{{ total_users }}</p>
+    </div>
+</div>
+
+
+<div class="chart-box">
+    <h2 style="text-align:center; color:#2b3a67; margin-bottom:20px;">
+        Top Active Users
+    </h2>
+
+    <canvas id="activityChart" height="120"></canvas>
+</div>
+
+
+<h2 style="color:#2b3a67; margin-bottom:10px;">Recent Activities</h2>
+
+<table class="activity-table">
+    <tr>
+        <th>User</th>
+        <th>Action</th>
+        <th>Details</th>
+        <th>Time</th>
+    </tr>
+
+    {% for log in recent_logs %}
+    <tr>
+        <td>{{ log.user }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.details }}</td>
+        <td>{{ log.timestamp }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+<!-- 🎨 Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('activityChart').getContext('2d');
+
+    const activityChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ chart_labels|safe }},
+            datasets: [{
+                label: 'Activity Count',
+                data: {{ chart_values|safe }},
+                backgroundColor: 'rgba(54, 99, 181, 0.7)',
+                borderColor: 'rgba(54, 99, 181, 1)',
+                borderWidth: 2,
+                borderRadius: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

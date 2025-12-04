@@ -1,0 +1,217 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}Competition Dashboard{% endblock %}
+
+{% block content %}
+<style>
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #eef4ff, #d9e6ff);
+}
+
+.dashboard-container {
+    margin-top: 40px;
+    padding: 20px;
+}
+
+.heading {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #1f2d5a;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+/* Stats Cards */
+.stats-section {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: white;
+    width: 260px;
+    padding: 25px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-card h2 {
+    font-size: 2.4rem;
+    color: #1f2d5a;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    color: #555;
+    font-size: 1.1rem;
+}
+
+/* Chart container */
+.chart-container {
+    width: 80%;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* Team ranking table */
+.table-box {
+    width: 80%;
+    margin: 40px auto;
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.table-box h3 {
+    text-align: center;
+    color: #1f2d5a;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 14px;
+    text-align: center;
+}
+
+table th {
+    background: #1f2d5a;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background: #f3f6ff;
+}
+
+.back-btn {
+    display: block;
+    width: 150px;
+    margin: 30px auto;
+    padding: 12px;
+    text-align: center;
+    background: #1f2d5a;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+.back-btn:hover {
+    background: #314b8c;
+}
+</style>
+
+<div class="dashboard-container">
+
+    <h1 class="heading">{{ competition.name }} Dashboard</h1>
+
+    <!-- Stats Section -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <h2>{{ total_teams }}</h2>
+            <p>Total Teams</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_players }}</h2>
+            <p>Total Players</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_matches }}</h2>
+            <p>Total Matches</p>
+        </div>
+    </div>
+
+    <!-- Chart 1: Matches Played -->
+    <div class="chart-container">
+        <h3 style="text-align:center; color:#1f2d5a;">Matches Played by Each Team</h3>
+        <canvas id="matchesChart"></canvas>
+    </div>
+
+    <!-- Chart 2: Goals Scored -->
+    {% if goals_list %}
+    <div class="chart-container">
+        <h3 style="text-align:center; color:#1f2d5a;">Goals Scored by Each Team</h3>
+        <canvas id="goalsChart"></canvas>
+    </div>
+    {% endif %}
+
+    <!-- Table: Team Ranking -->
+    <div class="table-box">
+        <h3>Team Performance Ranking</h3>
+
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Team</th>
+                <th>Matches</th>
+                <th>Goals</th>
+            </tr>
+
+            {% for t in ranking %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ t.team }}</td>
+                <td>{{ t.matches }}</td>
+                <td>{{ t.goals }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <a href="{% url 'competitions_list' competition.sport.sport_id %}" class="back-btn">← Back</a>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Matches Chart
+new Chart(document.getElementById('matchesChart'), {
+    type: 'bar',
+    data: {
+        labels: {{ team_names|safe }},
+        datasets: [{
+            label: 'Matches Played',
+            data: {{ match_count|safe }},
+            backgroundColor: 'rgba(54, 85, 162, 0.7)',
+        }]
+    },
+});
+
+// Goals Chart (if data exists)
+{% if goals_list %}
+new Chart(document.getElementById('goalsChart'), {
+    type: 'bar',
+    data: {
+        labels: {{ team_names|safe }},
+        datasets: [{
+            label: 'Goals Scored',
+            data: {{ goals_list|safe }},
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+        }]
+    },
+});
+{% endif %}
+</script>
+
+{% endblock %}

@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
+from django.db import models
+
 
 
 # ============================
@@ -218,3 +221,148 @@ def player_detail(request, player_id):
     )
 
     return render(request, "polls/player_detail.html", {"player": player})
+
+
+@login_required
+def activity_dashboard(request):
+    from .mongo import activity_logs  
+
+    if activity_logs is None:
+        return render(request, "polls/activity_dashboard.html", {
+            "error": "MongoDB is not connected!"
+        })
+
+    # Top active users
+    raw_users = activity_logs.aggregate([
+        {"$group": {"_id": "$user", "count": {"$sum": 1}}},
+        {"$sort": {"count": -1}},
+        {"$limit": 10}
+    ])
+    top_users = [{"user": u["_id"], "count": u["count"]} for u in raw_users]
+
+    # Prepare chart data
+    chart_labels = [u["user"] for u in top_users]
+    chart_values = [u["count"] for u in top_users]
+
+    # Recent logs
+    recent_logs = list(activity_logs.find().sort("timestamp", -1).limit(20))
+
+    # Totals
+    total_logs = activity_logs.count_documents({})
+    unique_users = activity_logs.distinct("user")
+    total_users = len(unique_users)
+
+    return render(request, "polls/activity_dashboard.html", {
+        "top_users": top_users,
+        "recent_logs": recent_logs,
+        "chart_labels": chart_labels,
+        "chart_values": chart_values,
+        "total_logs": total_logs,
+        "total_users": total_users,
+    })
+
+@login_required
+def dashboard_sports(request):
+    sports = Sport.objects.all()
+    return render(request, "polls/dashboard_sports.html", {"sports": sports})
+
+@login_required
+def dashboard_competitions(request, sport_id):
+    sport = get_object_or_404(Sport, sport_id=sport_id)
+    competitions = Competition.objects.filter(sport=sport)
+    return render(request, "polls/dashboard_competitions.html", {
+        "sport": sport,
+        "competitions": competitions
+    })
+
+
+@login_required
+def competition_dashboard(request, competition_id):
+    from .mongo import log_activity, mongo_db
+
+    competition = get_object_or_404(Competition, competition_id=competition_id)
+
+    # All teams in this competition
+    teams = Team.objects.filter(competition=competition)
+
+    team_names = []
+    match_count = []
+    goals_list = []
+
+    ranking_data = []  # for ranking table
+
+    for team in teams:
+        # Matches played
+        played = Match.objects.filter(
+            competition=competition
+        ).filter(
+            models.Q(home_team=team) | models.Q(away_team=team)
+        ).count()
+
+        # Goals scored by this team
+        home_goals = Match.objects.filter(
+            competition=competition, home_team=team
+        ).aggregate(models.Sum("score_home"))["score_home__sum"] or 0
+
+        away_goals = Match.objects.filter(
+            competition=competition, away_team=team
+        ).aggregate(models.Sum("score_away"))["score_away__sum"] or 0
+
+        total_goals = home_goals + away_goals
+
+        team_names.append(team.name)
+        match_count.append(played)
+        goals_list.append(total_goals)
+
+        ranking_data.append({
+            "team": team.name,
+            "matches": played,
+            "goals": total_goals
+        })
+
+    # Sort ranking by goals, then matches
+    ranking_data.sort(key=lambda x: (x["goals"], x["matches"]), reverse=True)
+
+    # Count totals
+    total_teams = teams.count()
+    total_players = Player.objects.filter(team__competition=competition).count()
+    total_matches = Match.objects.filter(competition=competition).count()
+
+    # -------------------------------------------------------
+    # ⭐ MONGO DB LOGGING (record that this user viewed dashboard)
+    # -------------------------------------------------------
+    log_activity(
+        user=request.user.username,
+        action="Viewed Competition Dashboard",
+        details={
+            "competition_id": competition_id,
+            "competition_name": competition.name
+        }
+    )
+
+    # -------------------------------------------------------
+    # ⭐ OPTIONAL: SAVE ANALYTICS SNAPSHOT TO MONGO
+    #     Useful for weekly/monthly analytics
+    # -------------------------------------------------------
+    if mongo_db is not None:
+        mongo_db["competition_stats"].insert_one({
+            "competition_id": competition_id,
+            "competition_name": competition.name,
+            "teams": ranking_data,
+            "timestamp": datetime.now()
+        })
+
+    return render(request, "polls/competition_dashboard.html", {
+        "competition": competition,
+        "total_teams": total_teams,
+        "total_players": total_players,
+        "total_matches": total_matches,
+
+        # charts
+        "team_names": team_names,
+        "match_count": match_count,
+        "goals_list": goals_list,
+
+        # ranking table
+        "ranking": ranking_data,
+    })

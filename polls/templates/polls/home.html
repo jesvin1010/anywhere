@@ -10,7 +10,6 @@
     padding: 0;
   }
 
-  /* 🔹 Added for logout position */
   .top-bar {
     position: absolute;
     top: 20px;
@@ -70,22 +69,25 @@
   }
 </style>
 
-<!-- 🔹 Logout + Username -->
-<!-- 🔹 Logout Button Only -->
 <div class="top-bar">
   <a href="{% url 'logout_user' %}" class="logout-btn">Logout</a>
 </div>
 
 <div class="home-container">
   <h1>Welcome</h1>
-  <h2 style="color:#2b3a67; font-size:2.3em; margin-top:-10px;">{{ user.first_name|upper }} {{ user.last_name|upper }}</h2>
-
+  <h2 style="color:#2b3a67; font-size:2.3em; margin-top:-10px;">
+    {{ user.first_name|upper }} {{ user.last_name|upper }}
+  </h2>
 
   <a href="{% url 'matches_sports' %}" class="btn">View Matches</a>
   <a href="{% url 'teams_sports' %}" class="btn">View Teams</a>
   <a href="{% url 'players_sports' %}" class="btn">Players</a>
+  <a href="{% url 'activity_dashboard' %}" class="btn">Activity Dashboard</a>
+
+  <!-- ⭐ Visible to ALL users -->
+  <a href="{% url 'dashboard_sports' %}" class="btn" 
+     style="background-color:#006c3a;">Competition Dashboard</a>
 
 </div>
-
 
 {% endblock %}

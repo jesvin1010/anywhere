@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-zet@4a%j$any3ai6c##v_m7aikx#*t1zw((!3b_43&j#lmhv0q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['jesvin10.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 
 
 
@@ -77,11 +78,13 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'jesvin10$default',
-        'USER': 'jesvin10',
-        'PASSWORD': 'mysqlpassword',
-        'HOST': 'jesvin10.mysql.pythonanywhere-services.com',
+        'NAME': 'my_new_db',      
+        'USER': 'root',      
+        'PASSWORD': 'jesvin',  
+        'HOST': 'localhost',
         'PORT': '3306',
+
+        # OPTIONAL but recommended
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         }
@@ -124,8 +127,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Default primary key field type

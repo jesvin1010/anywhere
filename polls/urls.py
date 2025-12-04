@@ -26,4 +26,12 @@ urlpatterns = [
     path("players/sport/<int:sport_id>/<int:competition_id>/<int:team_id>/",
          views.players_list, name="players_list"),
     path("player/<int:player_id>/", views.player_detail, name="player_detail"),
+
+    path("activity-dashboard/", views.activity_dashboard, name="activity_dashboard"),
+
+    #dashboard
+    path('dashboard/sports/', views.dashboard_sports, name='dashboard_sports'),
+    path('dashboard/<int:sport_id>/competitions/', views.dashboard_competitions, name='dashboard_competitions'),
+    path('dashboard/competition/<int:competition_id>/', views.competition_dashboard, name='competition_dashboard'),
+
 ]

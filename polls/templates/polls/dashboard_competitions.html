@@ -1,0 +1,73 @@
+{% extends 'polls/base.html' %}
+
+{% block title %}Competitions{% endblock %}
+
+{% block content %}
+<style>
+.page-container {
+    margin-top: 60px;
+    text-align: center;
+}
+
+.page-container h1 {
+    color: #2b3a67;
+    font-size: 2.3rem;
+}
+
+.subtext {
+    margin-top: -10px;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+.card-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-top: 30px;
+}
+
+.card {
+    width: 270px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+}
+
+.card h3 {
+    color: #2b3a67;
+    margin-bottom: 10px;
+}
+
+.btn-open {
+    padding: 10px 18px;
+    background: #2b3a67;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 12px;
+}
+</style>
+
+<div class="page-container">
+    <h1>{{ sport.name }} Competitions</h1>
+    <p class="subtext">Choose a competition to open the dashboard</p>
+
+    <div class="card-grid">
+        {% for comp in competitions %}
+        <div class="card">
+            <h3>{{ comp.name }}</h3>
+            <a href="{% url 'competition_dashboard' comp.competition_id %}" class="btn-open">Open Dashboard</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
