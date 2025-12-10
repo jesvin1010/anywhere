@@ -9,13 +9,8 @@
 </head>
 <body>
 
-    {% include 'polls/includes/_navbar.html' %}
-
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    {% block content %}{% endblock %}
 
     <script src="{% static 'polls/js/scripts.js' %}"></script>
 </body>
 </html>
-

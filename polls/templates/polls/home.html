@@ -1,92 +1,199 @@
 {% extends 'polls/base.html' %}
+{% load static %}
+
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <style>
-  body {
-    font-family: "Poppins", sans-serif;
-    background: linear-gradient(135deg, #f5f9ff, #e6f0ff);
+/* --- GENERAL PAGE LAYOUT --- */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
     margin: 0;
     padding: 0;
-  }
+}
 
-  .top-bar {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 18px;
-  }
+/* --- LAYOUT --- */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
 
-  .logout-btn {
-    background-color: crimson;
-    padding: 8px 18px;
-    border-radius: 6px;
-    color: white;
-    text-decoration: none;
-    transition: 0.3s;
-  }
+/* --- SIDEBAR --- */
+.sidebar {
+    width: 220px;
+    background: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
 
-  .logout-btn:hover {
-    background-color: rgb(200, 0, 50);
-  }
-
-  .home-container {
+.logo {
     text-align: center;
-    margin-top: 100px;
-    animation: fadeIn 1.2s ease-in-out;
-  }
-
-  .home-container h1 {
-    color: #2b3a67;
-    font-size: 3em;
-    margin-bottom: 10px;
-  }
-
-  .home-container p {
-    color: #444;
-    font-size: 1.2em;
+    font-size: 22px;
+    font-weight: bold;
     margin-bottom: 30px;
-  }
+}
 
-  .btn {
-    display: inline-block;
-    padding: 12px 24px;
-    background-color: #2b3a67;
+.nav-btn {
+    display: block;
     color: #fff;
     text-decoration: none;
-    border-radius: 8px;
-    margin: 10px;
-    transition: background 0.3s ease;
-  }
+    padding: 12px 20px;
+    margin: 5px 20px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
 
-  .btn:hover {
-    background-color: #4053a8;
-  }
+.nav-btn:hover {
+    background: #4a90e2;
+}
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+.logout-btn {
+    margin-top: auto;
+}
+
+/* --- CONTENT AREA --- */
+.content-area {
+    flex: 1;
+    padding: 40px;
+    background: #f4f4f4;
+}
+
+.welcome-text h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.welcome-text h2 {
+    font-size: 28px;
+    color: #4a90e2;
+}
+
+/* --- SIGNUP FORM BOX --- */
+.signup-box {
+    background: #fff;
+    padding: 25px 30px;
+    width: 420px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.signup-box h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* --- FORM INPUTS --- */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 4px rgba(74, 144, 226, 0.3);
+}
+
+/* --- SUBMIT BUTTON --- */
+button {
+    width: 100%;
+    background: #4a90e2;
+    border: none;
+    padding: 12px;
+    color: white;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #357abd;
+}
+
+/* --- "Already have an account" LINK --- */
+.login-link {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.login-link a {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        overflow-x: auto;
+    }
+    .nav-btn {
+        margin: 5px;
+        flex: 1;
+        text-align: center;
+    }
+    .content-area {
+        padding: 20px;
+    }
+}
 </style>
 
-<div class="top-bar">
-  <a href="{% url 'logout_user' %}" class="logout-btn">Logout</a>
-</div>
+<div class="layout">
 
-<div class="home-container">
-  <h1>Welcome</h1>
-  <h2 style="color:#2b3a67; font-size:2.3em; margin-top:-10px;">
-    {{ user.first_name|upper }} {{ user.last_name|upper }}
-  </h2>
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">SOFASCORE</div>
 
-  <a href="{% url 'matches_sports' %}" class="btn">View Matches</a>
-  <a href="{% url 'teams_sports' %}" class="btn">View Teams</a>
-  <a href="{% url 'players_sports' %}" class="btn">Players</a>
-  <a href="{% url 'activity_dashboard' %}" class="btn">Activity Dashboard</a>
+        <a href="{% url 'matches_sports' %}" class="nav-btn">View Matches</a>
+        <a href="{% url 'teams_sports' %}" class="nav-btn">View Teams</a>
+        <a href="{% url 'players_sports' %}" class="nav-btn">Players</a>
+        <a href="{% url 'activity_dashboard' %}" class="nav-btn">Activity Dashboard</a>
+        <a href="{% url 'dashboard_sports' %}" class="nav-btn">Competition Dashboard</a>
+        <a href="{% url 'logout_user' %}" class="nav-btn logout-btn">Logout</a>
+    </div>
 
-  <!-- ⭐ Visible to ALL users -->
-  <a href="{% url 'dashboard_sports' %}" class="btn" 
-     style="background-color:#006c3a;">Competition Dashboard</a>
+    <!-- RIGHT BACKGROUND AREA -->
+    <div class="content-area">
+        <div class="welcome-text">
+            <h1>Welcome</h1>
+            <h2>{{ user.first_name|upper }} {{ user.last_name|upper }}</h2>
+        </div>
+    </div>
 
 </div>
 
